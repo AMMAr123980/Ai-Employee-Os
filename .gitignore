@@ -1,0 +1,43 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+.next/
+out/
+dist/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# Runtime/generated files
+var/
+*.webm
+*.mp4
+*.tsbuildinfo
+
+# Archives
+*.zip
+
+# Old/backup project copy
+project_update/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
