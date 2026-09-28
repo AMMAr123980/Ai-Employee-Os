@@ -1,6 +1,7 @@
 import { getToken, clearToken } from "./auth";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
 
 export type PipelineStage =
   | "new"
@@ -86,7 +87,11 @@ export type KBAskResponse = {
   error?: string | null;
 };
 
-export type ClauseRiskLevel = "standard" | "attention" | "high_risk" | "unreviewed";
+export type ClauseRiskLevel =
+  | "standard"
+  | "attention"
+  | "high_risk"
+  | "unreviewed";
 
 export type ContractClause = {
   clause_type: string;
@@ -193,7 +198,6 @@ export type Invoice = {
   items: LineItem[];
 };
 
-
 export type EmailMessage = {
   id: string;
   customer_id: string;
@@ -239,7 +243,10 @@ export type EmployeeRun = {
   brief: string;
   intent?: string | null;
   confidence?: number | null;
-  action?: { type: string; config: Record<string, any> } | null;
+  action?: {
+    type: string;
+    config: Record<string, any>;
+  } | null;
   summary?: string | null;
   missing_info: string[];
   status: RunStatus;
@@ -249,7 +256,11 @@ export type EmployeeRun = {
   executed_at?: string | null;
 };
 
-export type RecordTable = { columns: string[]; rows: Record<string, any>[] };
+export type RecordTable = {
+  columns: string[];
+  rows: Record<string, any>[];
+};
+
 export type EmployeeRecords = Record<string, RecordTable>;
 
 export type Duty = {
@@ -258,7 +269,6 @@ export type Duty = {
   cadence: string;
   description: string;
 };
-
 
 // ---- Voice, meetings & tasks ----
 
@@ -273,7 +283,12 @@ export type VoiceStatus =
   | "failed"
   | "cancelled";
 
-export type VoiceStepStatus = "pending" | "executed" | "failed" | "skipped" | "cancelled";
+export type VoiceStepStatus =
+  | "pending"
+  | "executed"
+  | "failed"
+  | "skipped"
+  | "cancelled";
 
 export type VoiceStep = {
   id: string;
@@ -293,7 +308,11 @@ export type VoiceStep = {
 
 export type VoiceCommand = {
   id: string;
-  source: "app" | "text" | "whatsapp_team" | "whatsapp_customer";
+  source:
+    | "app"
+    | "text"
+    | "whatsapp_team"
+    | "whatsapp_customer";
   detected_language?: string | null;
   locale?: string | null;
   timezone?: string | null;
@@ -323,7 +342,14 @@ export const TERMINAL_VOICE_STATUSES: VoiceStatus[] = [
 ];
 
 export type IntentCatalog = {
-  intents: Record<string, { label: string; example: string | null; slots: string[] }>;
+  intents: Record<
+    string,
+    {
+      label: string;
+      example: string | null;
+      slots: string[];
+    }
+  >;
   read_only: string[];
   requires_confirmation: string[];
   auto_execute: string[];
@@ -334,7 +360,12 @@ export type Usage = {
   period: string;
   metrics: Record<
     string,
-    { used: number; limit: number | null; unlimited: boolean; percent: number | null }
+    {
+      used: number;
+      limit: number | null;
+      unlimited: boolean;
+      percent: number | null;
+    }
   >;
 };
 
@@ -345,7 +376,12 @@ export type MeetingStatus =
   | "completed"
   | "failed";
 
-export type MeetingSegment = { start: number; end: number; speaker: string; text: string };
+export type MeetingSegment = {
+  start: number;
+  end: number;
+  speaker: string;
+  text: string;
+};
 
 export type Meeting = {
   id: string;
@@ -357,18 +393,35 @@ export type Meeting = {
   status: MeetingStatus;
   transcript?: string | null;
   segments: MeetingSegment[];
-  speaker_method?: "provided" | "diarized" | "heuristic" | null;
+  speaker_method?:
+    | "provided"
+    | "diarized"
+    | "heuristic"
+    | null;
   summary?: string | null;
   decisions: string[];
-  action_items: { task_id: string; title: string; owner?: string | null; due?: string | null }[];
-  deadlines: { what: string; date: string }[];
+  action_items: {
+    task_id: string;
+    title: string;
+    owner?: string | null;
+    due?: string | null;
+  }[];
+  deadlines: {
+    what: string;
+    date: string;
+  }[];
   open_questions: string[];
   error?: string | null;
   created_at: string;
   completed_at?: string | null;
 };
 
-export type TaskStatus = "open" | "in_progress" | "done" | "cancelled";
+export type TaskStatus =
+  | "open"
+  | "in_progress"
+  | "done"
+  | "cancelled";
+
 export type TaskPriority = "low" | "normal" | "high";
 
 export type Task = {
@@ -383,7 +436,12 @@ export type Task = {
   customer_name?: string | null;
   assigned_to_user_id?: string | null;
   assignee_name?: string | null;
-  source: "manual" | "voice" | "followup" | "meeting" | "ai_employee";
+  source:
+    | "manual"
+    | "voice"
+    | "followup"
+    | "meeting"
+    | "ai_employee";
   created_at: string;
 };
 
@@ -394,7 +452,11 @@ export type ConditionalFollowUp = {
   condition_type: string;
   reminder_title: string;
   due_at: string;
-  status: "waiting" | "fired" | "resolved" | "cancelled";
+  status:
+    | "waiting"
+    | "fired"
+    | "resolved"
+    | "cancelled";
   resolved_reason?: string | null;
   fired_task_id?: string | null;
   created_at: string;
@@ -403,125 +465,225 @@ export type ConditionalFollowUp = {
 /** Thrown on a 402 so the UI can say "500 of 500 used" rather than "request failed". */
 export class QuotaError extends Error {
   constructor(
-    public detail: { metric: string; limit: number; used: number; plan: string; message?: string }
+    public detail: {
+      metric: string;
+      limit: number;
+      used: number;
+      plan: string;
+      message?: string;
+    }
   ) {
     super(detail?.message || "Quota exceeded");
     this.name = "QuotaError";
   }
 }
 
-async function request<T>(path: string, options?: RequestInit): Promise<T> {
+async function request<T>(
+  path: string,
+  options?: RequestInit
+): Promise<T> {
   const token = getToken();
   let res: Response;
+
   try {
     res = await fetch(`${API_URL}${path}`, {
       ...options,
       headers: {
         "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(token
+          ? { Authorization: `Bearer ${token}` }
+          : {}),
         ...(options?.headers || {}),
       },
       cache: "no-store",
     });
   } catch (err: any) {
-    throw new Error(`Unable to connect to backend server (${API_URL}${path}). Make sure backend is running.`);
+    throw new Error(
+      `Unable to connect to backend server (${API_URL}${path}). Make sure backend is running.`
+    );
   }
 
   if (res.status === 401) {
     clearToken();
-    if (typeof window !== "undefined") window.location.href = "/login";
+
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
+
     throw new Error("Not authenticated");
   }
+
   if (res.status === 402) {
     const body = await res.json().catch(() => ({}));
     throw new QuotaError(body.detail ?? body);
   }
+
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`API ${path} failed (${res.status}): ${text}`);
+
+    throw new Error(
+      `API ${path} failed (${res.status}): ${text}`
+    );
   }
+
   return res.json();
 }
 
-/** Fetches a PDF with the auth header attached and opens it in a new tab.
- * A plain <a href> can't carry an Authorization header, so PDFs must be
- * fetched as a blob client-side rather than linked directly. */
+/** Fetches a PDF with the auth header attached and opens it in a new tab. */
 async function openPdf(path: string) {
   const token = getToken();
+
   const res = await fetch(`${API_URL}${path}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    headers: token
+      ? { Authorization: `Bearer ${token}` }
+      : {},
   });
-  if (!res.ok) throw new Error(`Failed to load PDF (${res.status})`);
+
+  if (!res.ok) {
+    throw new Error(`Failed to load PDF (${res.status})`);
+  }
+
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
+
   window.open(url, "_blank");
 }
 
-/** Multipart POST — FormData sets its own Content-Type boundary, so unlike
- * request() this must not send a JSON content type. */
-async function upload<T>(path: string, form: FormData): Promise<T> {
+/** Multipart POST */
+async function upload<T>(
+  path: string,
+  form: FormData
+): Promise<T> {
   const token = getToken();
+
   const res = await fetch(`${API_URL}${path}`, {
     method: "POST",
     body: form,
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    headers: token
+      ? { Authorization: `Bearer ${token}` }
+      : {},
   });
+
   if (res.status === 401) {
     clearToken();
-    if (typeof window !== "undefined") window.location.href = "/login";
+
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
+
     throw new Error("Not authenticated");
   }
+
   if (res.status === 402) {
     const body = await res.json().catch(() => ({}));
     throw new QuotaError(body.detail ?? body);
   }
+
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Upload failed (${res.status}): ${text}`);
+
+    throw new Error(
+      `Upload failed (${res.status}): ${text}`
+    );
   }
+
   return res.json();
 }
 
-/** Fetches audio with the auth header and returns a blob URL.
- * An <audio src> tag can't carry an Authorization header, which is exactly why
- * the backend streams recordings through an authenticated route instead of
- * handing out signed links. */
-async function fetchAudioUrl(path: string): Promise<string> {
+/** Fetches audio and returns a blob URL. */
+async function fetchAudioUrl(
+  path: string
+): Promise<string> {
   const token = getToken();
+
   const res = await fetch(`${API_URL}${path}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    headers: token
+      ? { Authorization: `Bearer ${token}` }
+      : {},
   });
-  if (!res.ok) throw new Error(`Couldn't load that recording (${res.status})`);
+
+  if (!res.ok) {
+    throw new Error(
+      `Couldn't load that recording (${res.status})`
+    );
+  }
+
   return URL.createObjectURL(await res.blob());
 }
 
 export const api = {
   // Customers
-  listCustomers: () => request<Customer[]>("/api/customers"),
+
+  listCustomers: () =>
+    request<Customer[]>("/api/customers"),
+
   createCustomer: (data: Partial<Customer>) =>
-    request<Customer>("/api/customers", { method: "POST", body: JSON.stringify(data) }),
-  deleteCustomer: (id: string) =>
-    request<{ ok: boolean }>(`/api/customers/${id}`, { method: "DELETE" }),
-  getCustomer: (id: string) => request<Customer>(`/api/customers/${id}`),
-  updatePipelineStage: (id: string, stage: PipelineStage) =>
-    request<Customer>(`/api/customers/${id}/stage`, {
-      method: "PATCH",
-      body: JSON.stringify({ pipeline_stage: stage }),
-    }),
-  addNote: (id: string, content: string, note_type: string = "note") =>
-    request<NoteOut>(`/api/customers/${id}/notes`, {
+    request<Customer>("/api/customers", {
       method: "POST",
-      body: JSON.stringify({ content, note_type }),
-    }),
-  getActivity: (id: string) => request<ActivityItem[]>(`/api/customers/${id}/activity`),
-  generateAiSummary: (id: string) =>
-    request<{ summary: string; generated_at: string }>(`/api/customers/${id}/ai-summary`, {
-      method: "POST",
+      body: JSON.stringify(data),
     }),
 
+  deleteCustomer: (id: string) =>
+    request<{ ok: boolean }>(
+      `/api/customers/${id}`,
+      { method: "DELETE" }
+    ),
+
+  getCustomer: (id: string) =>
+    request<Customer>(`/api/customers/${id}`),
+
+  updatePipelineStage: (
+    id: string,
+    stage: PipelineStage
+  ) =>
+    request<Customer>(
+      `/api/customers/${id}/stage`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          pipeline_stage: stage,
+        }),
+      }
+    ),
+
+  addNote: (
+    id: string,
+    content: string,
+    note_type: string = "note"
+  ) =>
+    request<NoteOut>(
+      `/api/customers/${id}/notes`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          content,
+          note_type,
+        }),
+      }
+    ),
+
+  getActivity: (id: string) =>
+    request<ActivityItem[]>(
+      `/api/customers/${id}/activity`
+    ),
+
+  generateAiSummary: (id: string) =>
+    request<{
+      summary: string;
+      generated_at: string;
+    }>(
+      `/api/customers/${id}/ai-summary`,
+      { method: "POST" }
+    ),
+
   // Quotations
-  listQuotations: () => request<Quotation[]>("/api/quotations"),
-  getQuotation: (id: string) => request<Quotation>(`/api/quotations/${id}`),
+
+  listQuotations: () =>
+    request<Quotation[]>("/api/quotations"),
+
+  getQuotation: (id: string) =>
+    request<Quotation>(`/api/quotations/${id}`),
+
   createQuotation: (data: {
     customer_id: string;
     items: LineItem[];
@@ -529,45 +691,97 @@ export const api = {
     tax_percent?: number;
     notes?: string;
     generate_ai_summary?: boolean;
-  }) => request<Quotation>("/api/quotations", { method: "POST", body: JSON.stringify(data) }),
-  aiDraftItems: (prompt: string) =>
-    request<{ items: LineItem[]; suggested_notes: string | null }>("/api/quotations/ai-draft", {
-      method: "POST",
-      body: JSON.stringify({ prompt }),
-    }),
-  updateQuotationStatus: (id: string, status: Quotation["status"]) =>
-    request<Quotation>(`/api/quotations/${id}/status`, {
-      method: "PATCH",
-      body: JSON.stringify({ status }),
-    }),
-  convertToInvoice: (
-    id: string,
-    options?: { is_recurring?: boolean; recurrence_interval_days?: number }
-  ) =>
-    request<Invoice>(`/api/quotations/${id}/convert-to-invoice`, {
-      method: "POST",
-      body: JSON.stringify(options || {}),
-    }),
-  openQuotationPdf: (id: string) => openPdf(`/api/quotations/${id}/pdf`),
-
-  // Invoices
-  listInvoices: () => request<Invoice[]>("/api/invoices"),
-  getInvoice: (id: string) => request<Invoice>(`/api/invoices/${id}`),
-  recordPayment: (id: string, amount: number) =>
-    request<Invoice>(`/api/invoices/${id}/payments`, {
-      method: "POST",
-      body: JSON.stringify({ amount }),
-    }),
-  openInvoicePdf: (id: string) => openPdf(`/api/invoices/${id}/pdf`),
-  checkRecurringNow: () =>
-    request<{ invoices_created: number }>("/api/invoices/recurring/check-now", { method: "POST" }),
-
-  // AI Email Assistant
-  draftEmail: (data: { customer_id: string; quotation_id?: string; invoice_id?: string; instructions?: string }) =>
-    request<{ to_email: string | null; subject: string; body: string }>("/api/emails/draft", {
+  }) =>
+    request<Quotation>("/api/quotations", {
       method: "POST",
       body: JSON.stringify(data),
     }),
+
+  aiDraftItems: (prompt: string) =>
+    request<{
+      items: LineItem[];
+      suggested_notes: string | null;
+    }>("/api/quotations/ai-draft", {
+      method: "POST",
+      body: JSON.stringify({ prompt }),
+    }),
+
+  updateQuotationStatus: (
+    id: string,
+    status: Quotation["status"]
+  ) =>
+    request<Quotation>(
+      `/api/quotations/${id}/status`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status }),
+      }
+    ),
+
+  convertToInvoice: (
+    id: string,
+    options?: {
+      is_recurring?: boolean;
+      recurrence_interval_days?: number;
+    }
+  ) =>
+    request<Invoice>(
+      `/api/quotations/${id}/convert-to-invoice`,
+      {
+        method: "POST",
+        body: JSON.stringify(options || {}),
+      }
+    ),
+
+  openQuotationPdf: (id: string) =>
+    openPdf(`/api/quotations/${id}/pdf`),
+
+  // Invoices
+
+  listInvoices: () =>
+    request<Invoice[]>("/api/invoices"),
+
+  getInvoice: (id: string) =>
+    request<Invoice>(`/api/invoices/${id}`),
+
+  recordPayment: (
+    id: string,
+    amount: number
+  ) =>
+    request<Invoice>(
+      `/api/invoices/${id}/payments`,
+      {
+        method: "POST",
+        body: JSON.stringify({ amount }),
+      }
+    ),
+
+  openInvoicePdf: (id: string) =>
+    openPdf(`/api/invoices/${id}/pdf`),
+
+  checkRecurringNow: () =>
+    request<{ invoices_created: number }>(
+      "/api/invoices/recurring/check-now",
+      { method: "POST" }
+    ),
+
+  // AI Email Assistant
+
+  draftEmail: (data: {
+    customer_id: string;
+    quotation_id?: string;
+    invoice_id?: string;
+    instructions?: string;
+  }) =>
+    request<{
+      to_email: string | null;
+      subject: string;
+      body: string;
+    }>("/api/emails/draft", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
   sendEmail: (data: {
     customer_id: string;
     to_email: string;
@@ -577,190 +791,535 @@ export const api = {
     invoice_id?: string;
     attach_pdf?: boolean;
     follow_up_in_days?: number;
-  }) => request<EmailMessage>("/api/emails/send", { method: "POST", body: JSON.stringify(data) }),
+  }) =>
+    request<EmailMessage>("/api/emails/send", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
   listEmails: (customerId: string) =>
-    request<EmailMessage[]>(`/api/emails?customer_id=${customerId}`),
+    request<EmailMessage[]>(
+      `/api/emails?customer_id=${customerId}`
+    ),
+
   summarizeText: (text: string) =>
-    request<{ summary: string; action_items: string[] }>("/api/emails/summarize", {
+    request<{
+      summary: string;
+      action_items: string[];
+    }>("/api/emails/summarize", {
       method: "POST",
       body: JSON.stringify({ text }),
     }),
+
   classifyText: (text: string) =>
-    request<{ category: string; priority: string; reasoning: string }>("/api/emails/classify", {
+    request<{
+      category: string;
+      priority: string;
+      reasoning: string;
+    }>("/api/emails/classify", {
       method: "POST",
       body: JSON.stringify({ text }),
     }),
 
   // Follow-up Scheduler
-  listFollowUps: () => request<FollowUp[]>("/api/follow-ups"),
+
+  listFollowUps: () =>
+    request<FollowUp[]>("/api/follow-ups"),
+
   checkFollowUpsNow: () =>
-    request<{ drafts_created: number }>("/api/follow-ups/check-now", { method: "POST" }),
-  sendFollowUp: (id: string, data: { subject?: string; body?: string; attach_pdf?: boolean }) =>
-    request<EmailMessage>(`/api/follow-ups/${id}/send`, { method: "POST", body: JSON.stringify(data) }),
+    request<{ drafts_created: number }>(
+      "/api/follow-ups/check-now",
+      { method: "POST" }
+    ),
+
+  sendFollowUp: (
+    id: string,
+    data: {
+      subject?: string;
+      body?: string;
+      attach_pdf?: boolean;
+    }
+  ) =>
+    request<EmailMessage>(
+      `/api/follow-ups/${id}/send`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      }
+    ),
+
   dismissFollowUp: (id: string) =>
-    request<{ ok: boolean }>(`/api/follow-ups/${id}/dismiss`, { method: "POST" }),
+    request<{ ok: boolean }>(
+      `/api/follow-ups/${id}/dismiss`,
+      { method: "POST" }
+    ),
 
   // AI Employees
-  listAiEmployees: () => request<AIEmployee[]>("/api/ai-employees"),
-  listDuties: () => request<{ duties: Record<string, Duty> }>("/api/ai-employees/duties"),
+
+  listAiEmployees: () =>
+    request<AIEmployee[]>("/api/ai-employees"),
+
+  listDuties: () =>
+    request<{ duties: Record<string, Duty> }>(
+      "/api/ai-employees/duties"
+    ),
+
   updateEmployeeConfig: (
     key: string,
-    data: { enabled?: boolean; display_name?: string; autonomy_level?: string; instructions?: string }
+    data: {
+      enabled?: boolean;
+      display_name?: string;
+      autonomy_level?: string;
+      instructions?: string;
+    }
   ) =>
-    request<AIEmployee>(`/api/ai-employees/${key}/config`, {
-      method: "PATCH",
-      body: JSON.stringify(data),
-    }),
-  submitBrief: (key: string, brief: string, dry_run = false) =>
-    request<EmployeeRun>(`/api/ai-employees/${key}/brief`, {
-      method: "POST",
-      body: JSON.stringify({ brief, dry_run }),
-    }),
-  confirmRun: (runId: string, overrides: Record<string, any> = {}) =>
-    request<EmployeeRun>(`/api/ai-employees/runs/${runId}/confirm`, {
-      method: "POST",
-      body: JSON.stringify({ overrides }),
-    }),
+    request<AIEmployee>(
+      `/api/ai-employees/${key}/config`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(data),
+      }
+    ),
+
+  submitBrief: (
+    key: string,
+    brief: string,
+    dry_run = false
+  ) =>
+    request<EmployeeRun>(
+      `/api/ai-employees/${key}/brief`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          brief,
+          dry_run,
+        }),
+      }
+    ),
+
+  confirmRun: (
+    runId: string,
+    overrides: Record<string, any> = {}
+  ) =>
+    request<EmployeeRun>(
+      `/api/ai-employees/runs/${runId}/confirm`,
+      {
+        method: "POST",
+        body: JSON.stringify({ overrides }),
+      }
+    ),
+
   cancelRun: (runId: string) =>
-    request<EmployeeRun>(`/api/ai-employees/runs/${runId}/cancel`, { method: "POST" }),
+    request<EmployeeRun>(
+      `/api/ai-employees/runs/${runId}/cancel`,
+      { method: "POST" }
+    ),
+
   listRuns: (key?: string) =>
-    request<EmployeeRun[]>(`/api/ai-employees/runs${key ? `?employee_key=${key}` : ""}`),
+    request<EmployeeRun[]>(
+      `/api/ai-employees/runs${
+        key ? `?employee_key=${key}` : ""
+      }`
+    ),
+
   listEmployeeRecords: (key: string) =>
-    request<EmployeeRecords>(`/api/ai-employees/${key}/records`),
-  runDuty: (key: string, duty: string) =>
-    request<EmployeeRun>(`/api/ai-employees/${key}/run-duty/${duty}`, { method: "POST" }),
+    request<EmployeeRecords>(
+      `/api/ai-employees/${key}/records`
+    ),
+
+  runDuty: (
+    key: string,
+    duty: string
+  ) =>
+    request<EmployeeRun>(
+      `/api/ai-employees/${key}/run-duty/${duty}`,
+      { method: "POST" }
+    ),
 
   // Team management
-  listTeam: () => request<TeamMember[]>("/api/team"),
-  inviteTeamMember: (data: { name: string; email: string; password: string; role: UserRole }) =>
-    request<TeamMember>("/api/team/invite", { method: "POST", body: JSON.stringify(data) }),
-  updateTeamRole: (userId: string, role: UserRole) =>
-    request<TeamMember>(`/api/team/${userId}/role`, { method: "PATCH", body: JSON.stringify({ role }) }),
+
+  listTeam: () =>
+    request<TeamMember[]>("/api/team"),
+
+  inviteTeamMember: (data: {
+    name: string;
+    email: string;
+    password: string;
+    role: UserRole;
+  }) =>
+    request<TeamMember>("/api/team/invite", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  updateTeamRole: (
+    userId: string,
+    role: UserRole
+  ) =>
+    request<TeamMember>(
+      `/api/team/${userId}/role`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ role }),
+      }
+    ),
+
   removeTeamMember: (userId: string) =>
-    request<{ ok: boolean }>(`/api/team/${userId}`, { method: "DELETE" }),
+    request<{ ok: boolean }>(
+      `/api/team/${userId}`,
+      { method: "DELETE" }
+    ),
 
   // Voice commands
-  submitVoiceRecording: (blob: Blob, filename = "voice-note.webm", transcript?: string) => {
+
+  submitVoiceRecording: (
+    blob: Blob,
+    filename = "voice-note.webm",
+    transcript?: string
+  ) => {
     const form = new FormData();
+
     form.append("audio", blob, filename);
-    if (transcript) form.append("transcript", transcript);
-    // The browser is the only thing that knows where the words were spoken.
-    form.append("timezone", Intl.DateTimeFormat().resolvedOptions().timeZone);
-    return upload<VoiceCommand>("/api/voice-commands", form);
+
+    if (transcript) {
+      form.append("transcript", transcript);
+    }
+
+    form.append(
+      "timezone",
+      Intl.DateTimeFormat().resolvedOptions().timeZone
+    );
+
+    return upload<VoiceCommand>(
+      "/api/voice-commands",
+      form
+    );
   },
-  submitTextCommand: (text: string, dry_run = false) =>
-    request<VoiceCommand>("/api/voice-commands/text", {
-      method: "POST",
-      body: JSON.stringify({
-        text,
-        dry_run,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      }),
-    }),
-  getVoiceCommand: (id: string) => request<VoiceCommand>(`/api/voice-commands/${id}`),
+
+  submitTextCommand: (
+    text: string,
+    dry_run = false
+  ) =>
+    request<VoiceCommand>(
+      "/api/voice-commands/text",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          text,
+          dry_run,
+          timezone:
+            Intl.DateTimeFormat().resolvedOptions().timeZone,
+        }),
+      }
+    ),
+
+  getVoiceCommand: (id: string) =>
+    request<VoiceCommand>(
+      `/api/voice-commands/${id}`
+    ),
+
   listVoiceCommands: (limit = 30) =>
-    request<VoiceCommand[]>(`/api/voice-commands?limit=${limit}`),
+    request<VoiceCommand[]>(
+      `/api/voice-commands?limit=${limit}`
+    ),
+
   confirmVoiceCommand: (
     id: string,
-    options: { only_steps?: string[] | null; step_overrides?: Record<string, Record<string, any>> } = {}
+    options: {
+      only_steps?: string[] | null;
+      step_overrides?: Record<
+        string,
+        Record<string, any>
+      >;
+    } = {}
   ) =>
-    request<VoiceCommand>(`/api/voice-commands/${id}/confirm`, {
-      method: "POST",
-      body: JSON.stringify({
-        only_steps: options.only_steps ?? null,
-        step_overrides: options.step_overrides ?? {},
-        overrides: {},
-      }),
-    }),
+    request<VoiceCommand>(
+      `/api/voice-commands/${id}/confirm`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          only_steps:
+            options.only_steps ?? null,
+          step_overrides:
+            options.step_overrides ?? {},
+          overrides: {},
+        }),
+      }
+    ),
+
   cancelVoiceCommand: (id: string) =>
-    request<VoiceCommand>(`/api/voice-commands/${id}/cancel`, { method: "POST" }),
-  getVoiceCatalog: () => request<IntentCatalog>("/api/voice-commands/intents/catalog"),
-  getUsage: () => request<Usage>("/api/voice-commands/usage"),
-  getCommandAudioUrl: (id: string) => fetchAudioUrl(`/api/voice-commands/${id}/audio`),
+    request<VoiceCommand>(
+      `/api/voice-commands/${id}/cancel`,
+      { method: "POST" }
+    ),
+
+  getVoiceCatalog: () =>
+    request<IntentCatalog>(
+      "/api/voice-commands/intents/catalog"
+    ),
+
+  getUsage: () =>
+    request<Usage>("/api/voice-commands/usage"),
+
+  getCommandAudioUrl: (id: string) =>
+    fetchAudioUrl(
+      `/api/voice-commands/${id}/audio`
+    ),
 
   // Meetings
-  uploadMeeting: (file: File, opts: { title?: string; customer_id?: string } = {}) => {
+
+  uploadMeeting: (
+    file: File,
+    opts: {
+      title?: string;
+      customer_id?: string;
+    } = {}
+  ) => {
     const form = new FormData();
+
     form.append("audio", file, file.name);
-    if (opts.title) form.append("title", opts.title);
-    if (opts.customer_id) form.append("customer_id", opts.customer_id);
-    form.append("timezone", Intl.DateTimeFormat().resolvedOptions().timeZone);
-    return upload<Meeting>("/api/meetings", form);
+
+    if (opts.title) {
+      form.append("title", opts.title);
+    }
+
+    if (opts.customer_id) {
+      form.append(
+        "customer_id",
+        opts.customer_id
+      );
+    }
+
+    form.append(
+      "timezone",
+      Intl.DateTimeFormat().resolvedOptions().timeZone
+    );
+
+    return upload<Meeting>(
+      "/api/meetings",
+      form
+    );
   },
-  listMeetings: () => request<Meeting[]>("/api/meetings"),
-  getMeeting: (id: string) => request<Meeting>(`/api/meetings/${id}`),
-  renameSpeakers: (id: string, speaker_map: Record<string, string>) =>
-    request<Meeting>(`/api/meetings/${id}/speakers`, {
-      method: "POST",
-      body: JSON.stringify({ speaker_map }),
-    }),
+
+  listMeetings: () =>
+    request<Meeting[]>("/api/meetings"),
+
+  getMeeting: (id: string) =>
+    request<Meeting>(`/api/meetings/${id}`),
+
+  renameSpeakers: (
+    id: string,
+    speaker_map: Record<string, string>
+  ) =>
+    request<Meeting>(
+      `/api/meetings/${id}/speakers`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          speaker_map,
+        }),
+      }
+    ),
+
   deleteMeeting: (id: string) =>
-    request<{ ok: boolean }>(`/api/meetings/${id}`, { method: "DELETE" }),
+    request<{ ok: boolean }>(
+      `/api/meetings/${id}`,
+      { method: "DELETE" }
+    ),
 
   // Tasks
-  listTasks: (params: { status?: TaskStatus; mine?: boolean; customer_id?: string } = {}) => {
+
+  listTasks: (
+    params: {
+      status?: TaskStatus;
+      mine?: boolean;
+      customer_id?: string;
+    } = {}
+  ) => {
     const query = new URLSearchParams();
-    if (params.status) query.set("status", params.status);
-    if (params.mine) query.set("mine", "true");
-    if (params.customer_id) query.set("customer_id", params.customer_id);
+
+    if (params.status) {
+      query.set("status", params.status);
+    }
+
+    if (params.mine) {
+      query.set("mine", "true");
+    }
+
+    if (params.customer_id) {
+      query.set(
+        "customer_id",
+        params.customer_id
+      );
+    }
+
     const qs = query.toString();
-    return request<Task[]>(`/api/tasks${qs ? `?${qs}` : ""}`);
+
+    return request<Task[]>(
+      `/api/tasks${qs ? `?${qs}` : ""}`
+    );
   },
+
   createTask: (data: {
     title: string;
     description?: string;
     priority?: TaskPriority;
     due_date?: string | null;
     customer_id?: string | null;
-  }) => request<Task>("/api/tasks", { method: "POST", body: JSON.stringify(data) }),
+  }) =>
+    request<Task>("/api/tasks", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
   updateTask: (
     id: string,
-    data: { status?: TaskStatus; priority?: TaskPriority; title?: string; due_date?: string | null }
-  ) => request<Task>(`/api/tasks/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
-  deleteTask: (id: string) => request<{ ok: boolean }>(`/api/tasks/${id}`, { method: "DELETE" }),
+    data: {
+      status?: TaskStatus;
+      priority?: TaskPriority;
+      title?: string;
+      due_date?: string | null;
+    }
+  ) =>
+    request<Task>(
+      `/api/tasks/${id}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(data),
+      }
+    ),
 
-  // Conditional follow-ups ("remind me if they don't reply")
+  deleteTask: (id: string) =>
+    request<{ ok: boolean }>(
+      `/api/tasks/${id}`,
+      { method: "DELETE" }
+    ),
+
+  // Conditional follow-ups
+
   listConditionalFollowUps: () =>
-    request<ConditionalFollowUp[]>("/api/tasks/followups/pending"),
+    request<ConditionalFollowUp[]>(
+      "/api/tasks/followups/pending"
+    ),
+
   checkConditionalFollowUpsNow: () =>
-    request<{ checked: number; fired: number; resolved: number; errors: number }>(
+    request<{
+      checked: number;
+      fired: number;
+      resolved: number;
+      errors: number;
+    }>(
       "/api/tasks/followups/check-now",
       { method: "POST" }
     ),
-  cancelConditionalFollowUp: (id: string) =>
-    request<ConditionalFollowUp>(`/api/tasks/followups/${id}/cancel`, { method: "POST" }),
 
-  // Knowledge base
-  listDocuments: (category?: string) =>
-    request<KBDocument[]>(`/api/documents${category ? `?category=${encodeURIComponent(category)}` : ""}`),
-  uploadDocument: (file: File, opts: { title?: string; category?: string } = {}) => {
-    const form = new FormData();
-    form.append("file", file, file.name);
-    if (opts.title) form.append("title", opts.title);
-    if (opts.category) form.append("category", opts.category);
-    return upload<KBDocument>("/api/documents", form);
-  },
-  getDocument: (id: string) => request<KBDocument>(`/api/documents/${id}`),
-  updateDocument: (id: string, data: { title?: string; category?: string }) =>
-    request<KBDocument>(`/api/documents/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
-  deleteDocument: (id: string) =>
-    request<{ ok: boolean }>(`/api/documents/${id}`, { method: "DELETE" }),
-  askDocuments: (question: string, document_id?: string) =>
-    request<KBAskResponse>("/api/documents/ask", {
-      method: "POST",
-      body: JSON.stringify({ question, document_id }),
-    }),
-  analyzeContract: (documentId: string, opts: { refresh?: boolean } = {}) =>
-    request<ContractAnalysisResponse>(
-      `/api/documents/${documentId}/contract-analysis${opts.refresh ? "?refresh=true" : ""}`,
+  cancelConditionalFollowUp: (id: string) =>
+    request<ConditionalFollowUp>(
+      `/api/tasks/followups/${id}/cancel`,
       { method: "POST" }
     ),
-  getContractAnalysis: (documentId: string) =>
-    request<ContractAnalysisResponse>(`/api/documents/${documentId}/contract-analysis`),
 
-  /** Polls a command until it reaches a terminal status. Backs off from 600ms
-   * to 3s: a short command is usually done on the second poll, and a long one
-   * shouldn't generate sixty requests while it works. */
+  // Knowledge base
+
+  listDocuments: (category?: string) =>
+    request<KBDocument[]>(
+      `/api/documents${
+        category
+          ? `?category=${encodeURIComponent(category)}`
+          : ""
+      }`
+    ),
+
+  uploadDocument: (
+    file: File,
+    opts: {
+      title?: string;
+      category?: string;
+    } = {}
+  ) => {
+    const form = new FormData();
+
+    form.append("file", file, file.name);
+
+    if (opts.title) {
+      form.append("title", opts.title);
+    }
+
+    if (opts.category) {
+      form.append(
+        "category",
+        opts.category
+      );
+    }
+
+    return upload<KBDocument>(
+      "/api/documents",
+      form
+    );
+  },
+
+  getDocument: (id: string) =>
+    request<KBDocument>(
+      `/api/documents/${id}`
+    ),
+
+  updateDocument: (
+    id: string,
+    data: {
+      title?: string;
+      category?: string;
+    }
+  ) =>
+    request<KBDocument>(
+      `/api/documents/${id}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(data),
+      }
+    ),
+
+  deleteDocument: (id: string) =>
+    request<{ ok: boolean }>(
+      `/api/documents/${id}`,
+      { method: "DELETE" }
+    ),
+
+  askDocuments: (
+    question: string,
+    document_id?: string
+  ) =>
+    request<KBAskResponse>(
+      "/api/documents/ask",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          question,
+          document_id,
+        }),
+      }
+    ),
+
+  analyzeContract: (
+    documentId: string,
+    opts: {
+      refresh?: boolean;
+    } = {}
+  ) =>
+    request<ContractAnalysisResponse>(
+      `/api/documents/${documentId}/contract-analysis${
+        opts.refresh ? "?refresh=true" : ""
+      }`,
+      { method: "POST" }
+    ),
+
+  getContractAnalysis: (
+    documentId: string
+  ) =>
+    request<ContractAnalysisResponse>(
+      `/api/documents/${documentId}/contract-analysis`
+    ),
+
+  /** Polls a command until it reaches a terminal status. */
   pollVoiceCommand: async (
     id: string,
     onUpdate: (command: VoiceCommand) => void,
@@ -768,55 +1327,214 @@ export const api = {
   ): Promise<VoiceCommand> => {
     const startedAt = Date.now();
     let delay = 600;
+
     for (;;) {
-      const command = await request<VoiceCommand>(`/api/voice-commands/${id}`);
+      const command =
+        await request<VoiceCommand>(
+          `/api/voice-commands/${id}`
+        );
+
       onUpdate(command);
-      if (TERMINAL_VOICE_STATUSES.includes(command.status)) return command;
-      if (Date.now() - startedAt > timeoutMs) {
-        throw new Error("Still working on it — check the history in a moment.");
+
+      if (
+        TERMINAL_VOICE_STATUSES.includes(
+          command.status
+        )
+      ) {
+        return command;
       }
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      delay = Math.min(delay * 1.4, 3000);
+
+      if (
+        Date.now() - startedAt >
+        timeoutMs
+      ) {
+        throw new Error(
+          "Still working on it — check the history in a moment."
+        );
+      }
+
+      await new Promise((resolve) =>
+        setTimeout(resolve, delay)
+      );
+
+      delay = Math.min(
+        delay * 1.4,
+        3000
+      );
     }
   },
 
   // WhatsApp Assistant
-  getWhatsAppConfig: () => request<WhatsAppConfig>("/api/whatsapp/config"),
-  updateWhatsAppConfig: (data: Partial<WhatsAppConfig>) =>
-    request<{ status: string }>("/api/whatsapp/config", { method: "POST", body: JSON.stringify(data) }),
-  listWhatsAppConversations: () => request<WhatsAppConversation[]>("/api/whatsapp/conversations"),
-  getWhatsAppMessages: (phone: string) =>
-    request<WhatsAppMessage[]>(`/api/whatsapp/conversations/${encodeURIComponent(phone)}/messages`),
-  sendWhatsAppMessage: (data: { recipient_phone: string; message_text: string }) =>
-    request<{ status: string; message_id: string }>("/api/whatsapp/send", { method: "POST", body: JSON.stringify(data) }),
-  suggestWhatsAppAiReply: (data: { recipient_phone: string; incoming_text: string }) =>
-    request<{ suggested_reply: string }>("/api/whatsapp/ai-suggest", { method: "POST", body: JSON.stringify(data) }),
+
+  getWhatsAppConfig: () =>
+    request<WhatsAppConfig>(
+      "/api/whatsapp/config"
+    ),
+
+  updateWhatsAppConfig: (
+    data: Partial<WhatsAppConfig>
+  ) =>
+    request<{ status: string }>(
+      "/api/whatsapp/config",
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      }
+    ),
+
+  listWhatsAppConversations: () =>
+    request<WhatsAppConversation[]>(
+      "/api/whatsapp/conversations"
+    ),
+
+  getWhatsAppMessages: (
+    phone: string
+  ) =>
+    request<WhatsAppMessage[]>(
+      `/api/whatsapp/conversations/${encodeURIComponent(
+        phone
+      )}/messages`
+    ),
+
+  sendWhatsAppMessage: (data: {
+    recipient_phone: string;
+    message_text: string;
+  }) =>
+    request<{
+      status: string;
+      message_id: string;
+    }>("/api/whatsapp/send", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  suggestWhatsAppAiReply: (data: {
+    recipient_phone: string;
+    incoming_text: string;
+  }) =>
+    request<{
+      suggested_reply: string;
+    }>("/api/whatsapp/ai-suggest", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 
   // Generic Workflow Automation
-  listWorkflows: () => request<Workflow[]>("/api/workflows"),
+
+  listWorkflows: () =>
+    request<Workflow[]>("/api/workflows"),
+
   createWorkflow: (data: any) =>
-    request<{ status: string; workflow_id: string }>("/api/workflows", { method: "POST", body: JSON.stringify(data) }),
-  updateWorkflow: (id: string, data: any) =>
-    request<{ status: string }>(`/api/workflows/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+    request<{
+      status: string;
+      workflow_id: string;
+    }>("/api/workflows", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  updateWorkflow: (
+    id: string,
+    data: any
+  ) =>
+    request<{ status: string }>(
+      `/api/workflows/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+      }
+    ),
+
   deleteWorkflow: (id: string) =>
-    request<{ status: string }>(`/api/workflows/${id}`, { method: "DELETE" }),
-  listWorkflowTemplates: () => request<WorkflowTemplate[]>("/api/workflows/templates"),
-  enableWorkflowTemplate: (templateId: string) =>
-    request<{ status: string; workflow_id: string }>(`/api/workflows/templates/${templateId}/enable`, { method: "POST" }),
-  listWorkflowRuns: () => request<WorkflowRun[]>("/api/workflows/runs"),
-  testTriggerWorkflow: (data: { event_type: string; invoice_id?: string; customer_id?: string; amount?: number }) =>
-    request<{ status: string; results: any[] }>("/api/workflows/test-trigger", { method: "POST", body: JSON.stringify(data) }),
+    request<{ status: string }>(
+      `/api/workflows/${id}`,
+      { method: "DELETE" }
+    ),
+
+  listWorkflowTemplates: () =>
+    request<WorkflowTemplate[]>(
+      "/api/workflows/templates"
+    ),
+
+  enableWorkflowTemplate: (
+    templateId: string
+  ) =>
+    request<{
+      status: string;
+      workflow_id: string;
+    }>(
+      `/api/workflows/templates/${templateId}/enable`,
+      { method: "POST" }
+    ),
+
+  listWorkflowRuns: () =>
+    request<WorkflowRun[]>(
+      "/api/workflows/runs"
+    ),
+
+  testTriggerWorkflow: (data: {
+    event_type: string;
+    invoice_id?: string;
+    customer_id?: string;
+    amount?: number;
+  }) =>
+    request<{
+      status: string;
+      results: any[];
+    }>("/api/workflows/test-trigger", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 
   // Inbound Email Sync
-  getInboxSyncConfig: () => request<InboundEmailSyncConfig>("/api/emails/sync-config"),
-  updateInboxSyncConfig: (data: Partial<InboundEmailSyncConfig>) =>
-    request<{ status: string }>("/api/emails/sync-config", { method: "POST", body: JSON.stringify(data) }),
-  syncInboxNow: () => request<{ synced_count: number; followups_resolved: number; last_synced_at: string }>("/api/emails/sync-inbox", { method: "POST" }),
-  simulateInboundEmail: (data: { from_email: string; from_name?: string; subject: string; body: string }) =>
-    request<{ status: string; email_id: string; followups_auto_resolved: number }>("/api/emails/simulate-inbound", { method: "POST", body: JSON.stringify(data) }),
+
+  getInboxSyncConfig: () =>
+    request<InboundEmailSyncConfig>(
+      "/api/emails/sync-config"
+    ),
+
+  updateInboxSyncConfig: (
+    data: Partial<InboundEmailSyncConfig>
+  ) =>
+    request<{ status: string }>(
+      "/api/emails/sync-config",
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      }
+    ),
+
+  syncInboxNow: () =>
+    request<{
+      synced_count: number;
+      followups_resolved: number;
+      last_synced_at: string;
+    }>("/api/emails/sync-inbox", {
+      method: "POST",
+    }),
+
+  simulateInboundEmail: (data: {
+    from_email: string;
+    from_name?: string;
+    subject: string;
+    body: string;
+  }) =>
+    request<{
+      status: string;
+      email_id: string;
+      followups_auto_resolved: number;
+    }>("/api/emails/simulate-inbound", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 
   // Calendar Events
-  listCalendarEvents: () => request<CalendarEvent[]>("/api/calendar/events"),
+
+  listCalendarEvents: () =>
+    request<CalendarEvent[]>(
+      "/api/calendar/events"
+    ),
+
   createCalendarEvent: (data: {
     title: string;
     description?: string;
@@ -825,65 +1543,243 @@ export const api = {
     customer_id?: string;
     location?: string;
     meeting_link?: string;
-  }) => request<{ status: string; event_id: string; google_url: string; outlook_url: string }>("/api/calendar/events", { method: "POST", body: JSON.stringify(data) }),
-  exportCalendarEventIcs: (eventId: string) => openPdf(`/api/calendar/events/${eventId}/export.ics`),
+  }) =>
+    request<{
+      status: string;
+      event_id: string;
+      google_url: string;
+      outlook_url: string;
+    }>("/api/calendar/events", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  exportCalendarEventIcs: (
+    eventId: string
+  ) =>
+    openPdf(
+      `/api/calendar/events/${eventId}/export.ics`
+    ),
 
   // Accounting Software Sync & Live HTTP Push Engine
-  getAccountingConfig: () => request<AccountingConfig>("/api/accounting/config"),
-  saveAccountingConfig: (data: Partial<AccountingConfig>) =>
-    request<{ status: string }>("/api/accounting/config", { method: "POST", body: JSON.stringify(data) }),
-  getAccountingAuthorizeUrl: (provider: string) =>
-    request<{ provider: string; authorize_url: string }>(`/api/accounting/oauth/authorize?provider=${provider}`),
-  handleAccountingOAuthCallback: (provider: string, code: string, realmId?: string) =>
-    request<{ status: string; provider: string; is_connected: boolean }>(
-      `/api/accounting/oauth/callback?provider=${provider}&code=${code}${realmId ? `&realmId=${realmId}` : ""}`
+
+  getAccountingConfig: () =>
+    request<AccountingConfig>(
+      "/api/accounting/config"
     ),
-  pushInvoicesToAccounting: (invoiceIds?: string[]) =>
-    request<{ status: string; provider: string; pushed_count: number; details: any[] }>(
+
+  saveAccountingConfig: (
+    data: Partial<AccountingConfig>
+  ) =>
+    request<{ status: string }>(
+      "/api/accounting/config",
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      }
+    ),
+
+  getAccountingAuthorizeUrl: (
+    provider: string
+  ) =>
+    request<{
+      provider: string;
+      authorize_url: string;
+    }>(
+      `/api/accounting/oauth/authorize?provider=${provider}`
+    ),
+
+  handleAccountingOAuthCallback: (
+    provider: string,
+    code: string,
+    realmId?: string
+  ) =>
+    request<{
+      status: string;
+      provider: string;
+      is_connected: boolean;
+    }>(
+      `/api/accounting/oauth/callback?provider=${provider}&code=${code}${
+        realmId
+          ? `&realmId=${realmId}`
+          : ""
+      }`
+    ),
+
+  pushInvoicesToAccounting: (
+    invoiceIds?: string[]
+  ) =>
+    request<{
+      status: string;
+      provider: string;
+      pushed_count: number;
+      details: any[];
+    }>("/api/accounting/export-invoices", {
+      method: "POST",
+      body: JSON.stringify({
+        invoice_ids: invoiceIds,
+      }),
+    }),
+
+  pushExpensesToAccounting: (
+    expenseIds?: string[]
+  ) =>
+    request<{
+      status: string;
+      provider: string;
+      pushed_count: number;
+      details: any[];
+    }>("/api/accounting/export-expenses", {
+      method: "POST",
+      body: JSON.stringify({
+        expense_ids: expenseIds,
+      }),
+    }),
+
+  exportInvoicesToAccounting: (
+    invoiceIds?: string[]
+  ) =>
+    request<{
+      provider: string;
+      exported_count: number;
+    }>(
       "/api/accounting/export-invoices",
-      { method: "POST", body: JSON.stringify({ invoice_ids: invoiceIds }) }
+      {
+        method: "POST",
+        body: JSON.stringify({
+          invoice_ids: invoiceIds,
+        }),
+      }
     ),
-  pushExpensesToAccounting: (expenseIds?: string[]) =>
-    request<{ status: string; provider: string; pushed_count: number; details: any[] }>(
-      "/api/accounting/export-expenses",
-      { method: "POST", body: JSON.stringify({ expense_ids: expenseIds }) }
-    ),
-  exportInvoicesToAccounting: (invoiceIds?: string[]) =>
-    request<{ provider: string; exported_count: number }>("/api/accounting/export-invoices", { method: "POST", body: JSON.stringify({ invoice_ids: invoiceIds }) }),
+
   syncAccountingNow: () =>
-    request<{ status: string; provider: string; invoices_pushed: number; expenses_pushed: number; details: any[]; last_synced_at: string }>("/api/accounting/sync-now", { method: "POST" }),
+    request<{
+      status: string;
+      provider: string;
+      invoices_pushed: number;
+      expenses_pushed: number;
+      details: any[];
+      last_synced_at: string;
+    }>("/api/accounting/sync-now", {
+      method: "POST",
+    }),
 
   // MFA & SSO Auth
-  setupMFA: () => request<MfaSetupResponse>("/api/auth/mfa/setup", { method: "POST" }),
+
+  setupMFA: () =>
+    request<MfaSetupResponse>(
+      "/api/auth/mfa/setup",
+      { method: "POST" }
+    ),
+
   verifyMFA: (code: string) =>
-    request<{ status: string }>("/api/auth/mfa/verify", { method: "POST", body: JSON.stringify({ code }) }),
+    request<{ status: string }>(
+      "/api/auth/mfa/verify",
+      {
+        method: "POST",
+        body: JSON.stringify({ code }),
+      }
+    ),
 
   // Public Developer API Keys
-  listApiKeys: () => request<ApiKeyItem[]>("/api/auth/api-keys"),
+
+  listApiKeys: () =>
+    request<ApiKeyItem[]>(
+      "/api/auth/api-keys"
+    ),
+
   createApiKey: (name: string) =>
-    request<{ id: string; name: string; api_key: string; prefix: string }>("/api/auth/api-keys", { method: "POST", body: JSON.stringify({ name }) }),
+    request<{
+      id: string;
+      name: string;
+      api_key: string;
+      prefix: string;
+    }>("/api/auth/api-keys", {
+      method: "POST",
+      body: JSON.stringify({ name }),
+    }),
+
   revokeApiKey: (id: string) =>
-    request<{ status: string }>(`/api/auth/api-keys/${id}`, { method: "DELETE" }),
+    request<{ status: string }>(
+      `/api/auth/api-keys/${id}`,
+      { method: "DELETE" }
+    ),
 
   // AI Reporting & Analytics
-  getReportsOverview: (days = 30) => request<ReportsOverview>(`/api/reports/overview?days=${days}`),
-  getSalesReports: (days = 30) => request<SalesAnalytics>(`/api/reports/sales?days=${days}`),
-  getRevenueReports: (days = 30) => request<RevenueAnalytics>(`/api/reports/revenue?days=${days}`),
-  getExpenseReports: (days = 30) => request<ExpenseAnalytics>(`/api/reports/expenses?days=${days}`),
-  getCustomerReports: (days = 30) => request<CustomerAnalytics>(`/api/reports/customers?days=${days}`),
-  getProductivityReports: (days = 30) => request<ProductivityAnalytics>(`/api/reports/productivity?days=${days}`),
-  getForecastingReports: (days = 30) => request<PredictiveForecasting>(`/api/reports/forecasting?days=${days}`),
-  generateAiInsights: (days = 30) => request<AiInsightsResponse>(`/api/reports/ai-insights?days=${days}`, { method: "POST" }),
+
+  getReportsOverview: (days = 30) =>
+    request<ReportsOverview>(
+      `/api/reports/overview?days=${days}`
+    ),
+
+  getSalesReports: (days = 30) =>
+    request<SalesAnalytics>(
+      `/api/reports/sales?days=${days}`
+    ),
+
+  getRevenueReports: (days = 30) =>
+    request<RevenueAnalytics>(
+      `/api/reports/revenue?days=${days}`
+    ),
+
+  getExpenseReports: (days = 30) =>
+    request<ExpenseAnalytics>(
+      `/api/reports/expenses?days=${days}`
+    ),
+
+  getCustomerReports: (days = 30) =>
+    request<CustomerAnalytics>(
+      `/api/reports/customers?days=${days}`
+    ),
+
+  getProductivityReports: (days = 30) =>
+    request<ProductivityAnalytics>(
+      `/api/reports/productivity?days=${days}`
+    ),
+
+  getForecastingReports: (days = 30) =>
+    request<PredictiveForecasting>(
+      `/api/reports/forecasting?days=${days}`
+    ),
+
+  generateAiInsights: (days = 30) =>
+    request<AiInsightsResponse>(
+      `/api/reports/ai-insights?days=${days}`,
+      { method: "POST" }
+    ),
 
   // Subscriptions & Billing
-  getSubscription: () => request<SubscriptionInfo>("/api/billing/subscription"),
-  createCheckoutSession: (plan: string, success_url?: string) =>
-    request<{ checkout_url: string; mode: string }>("/api/billing/create-checkout-session", {
-      method: "POST",
-      body: JSON.stringify({ plan, success_url }),
-    }),
+
+  getSubscription: () =>
+    request<SubscriptionInfo>(
+      "/api/billing/subscription"
+    ),
+
+  createCheckoutSession: (
+    plan: string,
+    success_url?: string
+  ) =>
+    request<{
+      checkout_url: string;
+      mode: string;
+    }>(
+      "/api/billing/create-checkout-session",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          plan,
+          success_url,
+        }),
+      }
+    ),
+
   changePlan: (plan: string) =>
-    request<{ company_id: string; plan: string; status: string; price_monthly: number }>("/api/billing/change-plan", {
+    request<{
+      company_id: string;
+      plan: string;
+      status: string;
+      price_monthly: number;
+    }>("/api/billing/change-plan", {
       method: "POST",
       body: JSON.stringify({ plan }),
     }),
@@ -940,7 +1836,13 @@ export type ExpenseAnalytics = {
 
 export type CustomerAnalytics = {
   total_customers: number;
-  top_customers_by_ltv: { id: string; name: string; company?: string | null; total_spent: number; invoice_count: number }[];
+  top_customers_by_ltv: {
+    id: string;
+    name: string;
+    company?: string | null;
+    total_spent: number;
+    invoice_count: number;
+  }[];
 };
 
 export type ProductivityAnalytics = {
@@ -967,11 +1869,29 @@ export type AiInsightsResponse = {
   period_days: number;
 };
 
+/*
+ * IMPORTANT:
+ * These two optional fields fix the TypeScript build error
+ * from accounting/page.tsx where realm_id and client_id
+ * are passed to saveAccountingConfig().
+ */
 export type AccountingConfig = {
-  provider: "quickbooks" | "xero" | "zoho" | "zoho_books" | "none" | string;
+  provider:
+    | "quickbooks"
+    | "xero"
+    | "zoho"
+    | "zoho_books"
+    | "none"
+    | string;
+
   is_connected: boolean;
+
+  realm_id?: string | null;
+  client_id?: string | null;
+
   auto_sync_invoices: boolean;
   auto_sync_expenses: boolean;
+
   last_synced_at?: string | null;
 };
 
@@ -990,6 +1910,7 @@ export type MfaSetupResponse = {
 };
 
 // Inbound Email Sync Config
+
 export type InboundEmailSyncConfig = {
   provider: string;
   email_address?: string | null;
@@ -999,6 +1920,7 @@ export type InboundEmailSyncConfig = {
 };
 
 // Calendar Event Type
+
 export type CalendarEvent = {
   id: string;
   title: string;
@@ -1016,6 +1938,7 @@ export type CalendarEvent = {
 };
 
 // WhatsApp Types
+
 export type WhatsAppConfig = {
   phone_number_id?: string | null;
   waba_id?: string | null;
@@ -1039,7 +1962,12 @@ export type WhatsAppConversation = {
 export type WhatsAppMessage = {
   id: string;
   direction: "inbound" | "outbound";
-  status: "sent" | "delivered" | "read" | "failed" | "received";
+  status:
+    | "sent"
+    | "delivered"
+    | "read"
+    | "failed"
+    | "received";
   message_type: string;
   body?: string | null;
   media_url?: string | null;
@@ -1048,6 +1976,7 @@ export type WhatsAppMessage = {
 };
 
 // Workflow Types
+
 export type WorkflowStep = {
   id?: string;
   step_order: number;
@@ -1071,7 +2000,11 @@ export type WorkflowRunStep = {
   id: string;
   step_order: number;
   action_type: string;
-  status: "pending" | "success" | "failed" | "skipped";
+  status:
+    | "pending"
+    | "success"
+    | "failed"
+    | "skipped";
   output?: Record<string, any> | null;
   error?: string | null;
   executed_at?: string | null;
@@ -1081,7 +2014,11 @@ export type WorkflowRun = {
   id: string;
   workflow_name: string;
   trigger_event: string;
-  status: "running" | "success" | "failed" | "partial_failure";
+  status:
+    | "running"
+    | "success"
+    | "failed"
+    | "partial_failure";
   error_message?: string | null;
   started_at: string;
   completed_at?: string | null;
@@ -1098,60 +2035,112 @@ export type WorkflowTemplate = {
 
 // ---- Data Export / Bulk Import API Helpers ----
 
-export async function exportDataFile(entity: string, format: "xlsx" | "csv" = "xlsx"): Promise<void> {
+export async function exportDataFile(
+  entity: string,
+  format: "xlsx" | "csv" = "xlsx"
+): Promise<void> {
   const token = getToken();
-  const res = await fetch(`${API_URL}/api/data/export/${entity}?format=${format}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
+
+  const res = await fetch(
+    `${API_URL}/api/data/export/${entity}?format=${format}`,
+    {
+      headers: token
+        ? { Authorization: `Bearer ${token}` }
+        : {},
+    }
+  );
+
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Export failed (${res.status}): ${text}`);
+
+    throw new Error(
+      `Export failed (${res.status}): ${text}`
+    );
   }
+
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
+
   const a = document.createElement("a");
+
   a.href = url;
   a.download = `${entity}_export.${format}`;
+
   document.body.appendChild(a);
   a.click();
   a.remove();
+
   URL.revokeObjectURL(url);
 }
 
 export async function importDataFile(
   entity: string,
   file: File
-): Promise<{ entity: string; imported_count: number; skipped_count: number }> {
+): Promise<{
+  entity: string;
+  imported_count: number;
+  skipped_count: number;
+}> {
   const token = getToken();
+
   const formData = new FormData();
+
   formData.append("file", file);
 
-  const res = await fetch(`${API_URL}/api/data/import/${entity}`, {
-    method: "POST",
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body: formData,
-  });
+  const res = await fetch(
+    `${API_URL}/api/data/import/${entity}`,
+    {
+      method: "POST",
+      headers: token
+        ? { Authorization: `Bearer ${token}` }
+        : {},
+      body: formData,
+    }
+  );
+
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Import failed (${res.status}): ${text}`);
+
+    throw new Error(
+      `Import failed (${res.status}): ${text}`
+    );
   }
+
   return res.json();
 }
 
-export async function downloadSampleTemplate(entity: string): Promise<void> {
+export async function downloadSampleTemplate(
+  entity: string
+): Promise<void> {
   const token = getToken();
-  const res = await fetch(`${API_URL}/api/data/template/${entity}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
-  if (!res.ok) throw new Error(`Template download failed (${res.status})`);
+
+  const res = await fetch(
+    `${API_URL}/api/data/template/${entity}`,
+    {
+      headers: token
+        ? { Authorization: `Bearer ${token}` }
+        : {},
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(
+      `Template download failed (${res.status})`
+    );
+  }
+
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
+
   const a = document.createElement("a");
+
   a.href = url;
   a.download = `sample_${entity}_template.csv`;
+
   document.body.appendChild(a);
   a.click();
   a.remove();
+
   URL.revokeObjectURL(url);
 }
 
